@@ -153,4 +153,100 @@ static NSString * kGiphyAPIKey;
     return task;
 }
 
++ (NSURLSessionDataTask *) trendingGIFsWithlimit:(NSUInteger) limit offset:(NSInteger) offset completion:(void (^) (NSArray * results, NSError * error)) block
+{
+    NSURLSession * session = [NSURLSession sharedSession];
+    NSURLRequest * request = [self giphyTrendingRequestWithLimit:limit offset:offset];
+    NSURLSessionDataTask * task = [session dataTaskWithRequest:request  completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        // network error
+        if (error) {
+            block(nil, error);
+        } else {
+            // json serialize error
+            NSError * error;
+            NSDictionary * results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+            if (error) {
+                block(nil, error);
+            } else {
+                NSArray * gifArray = [AXCGiphy AXCGiphyArrayFromDictArray:results[@"data"]];
+                block(gifArray, nil);
+            }
+        }
+    }];
+    [task resume];
+    return task;
+}
+
++ (NSURLSessionDataTask *) giphyTranslationForTerm:(NSString *)term completion:(void (^)(AXCGiphy *, NSError *))block
+{
+    NSURLSession * session = [NSURLSession sharedSession];
+    NSURLRequest * request = [self giphyTranslationRequestForTerm:term];
+    NSURLSessionDataTask * task = [session dataTaskWithRequest:request  completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        // network error
+        if (error) {
+            block(nil, error);
+        } else {
+            // json serialize error
+            NSError * error;
+            NSDictionary * results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+            if (error) {
+                block(nil, error);
+            } else {
+                AXCGiphy * result = [[AXCGiphy alloc] initWithDictionary:results[@"data"]];
+                block(result, nil);
+            }
+        }
+    }];
+    [task resume];
+    return task;
+}
+
+
++ (NSURLSessionDataTask *) gifForID:(NSString *)ID completion:(void (^)(AXCGiphy *, NSError *))block
+{
+    NSURLSession * session = [NSURLSession sharedSession];
+    NSURLRequest * request = [self giphyRequestForGIFWithID:ID];
+    NSURLSessionDataTask * task = [session dataTaskWithRequest:request  completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        // network error
+        if (error) {
+            block(nil, error);
+        } else {
+            // json serialize error
+            NSError * error;
+            NSDictionary * results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+            if (error) {
+                block(nil, error);
+            } else {
+                AXCGiphy * result = [[AXCGiphy alloc] initWithDictionary:results[@"data"]];
+                block(result, nil);
+            }
+        }
+    }];
+    [task resume];
+    return task;
+}
+
++ (NSURLSessionDataTask *) gifsForIDs:(NSArray *)IDs completion:(void (^)(NSArray *, NSError *))block
+{
+    NSURLSession * session = [NSURLSession sharedSession];
+    NSURLRequest * request = [self giphyRequestForGIFsWithIDs:IDs];
+    NSURLSessionDataTask * task = [session dataTaskWithRequest:request  completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        // network error
+        if (error) {
+            block(nil, error);
+        } else {
+            // json serialize error
+            NSError * error;
+            NSDictionary * results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+            if (error) {
+                block(nil, error);
+            } else {
+                NSArray * gifs = [AXCGiphy AXCGiphyArrayFromDictArray:results[@"data"]];
+                block(gifs, nil);
+            }
+        }
+    }];
+    [task resume];
+    return task;
+}
 @end

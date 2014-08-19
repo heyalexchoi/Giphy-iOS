@@ -13,7 +13,7 @@
 
 NSString * const kCollectionViewCellIdentifier = @"cellReuseIdentifier";
 @interface AXCViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
-@property (strong, nonatomic) NSArray * searchResults;
+@property (strong, nonatomic) NSArray * giphyResults;
 @property (weak, nonatomic) IBOutlet UICollectionView * collectionView;
 @end
 
@@ -23,15 +23,61 @@ NSString * const kCollectionViewCellIdentifier = @"cellReuseIdentifier";
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    
     [AXCGiphy setGiphyAPIKey:kGiphyPublicAPIKey];
    
-    [AXCGiphy searchGiphyWithTerm:@"ponies" limit:10 offset:0 completion:^(NSArray *results, NSError *error) {
-        self.searchResults = results;
+    [self getTranslation];
+}
+
+- (void) getTranslation
+{
+    [AXCGiphy giphyTranslationForTerm:@"frog" completion:^(AXCGiphy *result, NSError *error) {
+        self.giphyResults = @[result];
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    [self.collectionView reloadData];
+            [self.collectionView reloadData];
         }];
     }];
-    
+}
+
+- (void) getSingleGIF
+{
+    [AXCGiphy gifForID: @"dc6zaTOxFJmzC" completion:^(AXCGiphy *result, NSError *error) {
+        self.giphyResults = @[result];
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            [self.collectionView reloadData];
+        }];
+    }];
+}
+
+-(void) getSpecificGIFs
+{
+    [AXCGiphy gifsForIDs:@[ @"dc6zaTOxFJmzC", @"feqkVgjJpYtjy"] completion:^(NSArray *results, NSError *error) {
+        self.giphyResults = results;
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            [self.collectionView reloadData];
+        }];
+    }];
+}
+
+
+- (void) getTrending
+{
+    [AXCGiphy trendingGIFsWithlimit:10 offset:0 completion:^(NSArray *results, NSError *error) {
+        self.giphyResults = results;
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            [self.collectionView reloadData];
+        }];
+    }];
+}
+
+- (void) searchForPonies
+{
+    [AXCGiphy searchGiphyWithTerm:@"ponies" limit:10 offset:0 completion:^(NSArray *results, NSError *error) {
+        self.giphyResults = results;
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            [self.collectionView reloadData];
+        }];
+    }];
 }
 
 - (void)didReceiveMemoryWarning
@@ -47,12 +93,12 @@ NSString * const kCollectionViewCellIdentifier = @"cellReuseIdentifier";
 }
 - (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.searchResults.count;
+    return self.giphyResults.count;
 }
 - (UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     AXCCollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCollectionViewCellIdentifier forIndexPath:indexPath];
-    AXCGiphy * gif = self.searchResults[indexPath.item];
+    AXCGiphy * gif = self.giphyResults[indexPath.item];
     
     NSURLRequest * request = [NSURLRequest requestWithURL:gif.originalImage.url];
     [[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
