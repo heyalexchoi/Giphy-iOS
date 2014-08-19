@@ -7,6 +7,7 @@
 //
 
 #import "AXCViewController.h"
+#import <AXCGiphy/AXCGiphy.h>
 
 @interface AXCViewController ()
 
@@ -18,6 +19,9 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    [AXCGiphy setGiphyAPIKey:kGiphyPublicAPIKey];
+   
+    
 }
 
 - (void)didReceiveMemoryWarning

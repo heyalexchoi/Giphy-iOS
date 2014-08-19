@@ -7,7 +7,7 @@
 //
 //https://github.com/giphy/GiphyAPI
 #import "AXCGiphy.h"
-//#import <AFNetworking/AFURLRequestSerialization.h>
+#import <AFNetworking/AFURLRequestSerialization.h>
 #import "AXCGiphyImage.h"
 #import "AXCGiphyImageDownsampled.h"
 #import "AXCGiphyImageFixed.h"
@@ -72,14 +72,67 @@ static NSString * kGiphyAPIKey;
 {
     kGiphyAPIKey = APIKey;
 }
-+ (NSString *) getGiphyAPIKey
++ (NSString *) giphyAPIKey
 {
     return kGiphyAPIKey;
 }
-+ (NSURLSessionDataTask *) getGIFsForSearchTerm:(NSString *) searchTerm limit:(NSUInteger) limit offset:(NSUInteger) offset completion:(void (^) (NSArray * results, NSError * error)) block
+
++ (NSArray *) AXCGiphyArrayFromDictArray:(NSArray *) array
+{
+    NSMutableArray * gifArray = [NSMutableArray new];
+    [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        NSDictionary * dict = obj;
+        AXCGiphy * gif = [[AXCGiphy alloc] initWithDictionary:dict];
+        [gifArray addObject:gif];
+    }];
+    return gifArray;
+}
+
++ (NSURLRequest *) giphySearchRequestForTerm:(NSString *) term limit:(NSUInteger) limit offset:(NSInteger) offset
+{
+    return [self requestForEndPoint:@"/search" params:@{@"limit": @(limit), @"offset": @(offset), @"q": term}];
+}
+
++ (NSURLRequest *) giphyTrendingRequestWithLimit:(NSUInteger) limit offset:(NSUInteger) offset
+{
+    return [self requestForEndPoint:@"/trending" params:@{@"limit": @(limit), @"offset": @(offset)}];
+}
+
++ (NSURLRequest *) giphyRequestForGIFWithID:(NSString *) ID
+{
+    return [self requestForEndPoint:[NSString stringWithFormat:@"/%@",ID] params:nil];
+}
++ (NSURLRequest *) giphyRequestForGIFsWithIDs:(NSArray *) IDs
+{
+    return [self requestForEndPoint:@"" params:@{@"ids": [IDs componentsJoinedByString:@","]}];
+}
+
++ (NSURLRequest *) giphyTranslationRequestForTerm:(NSString *) term
+{
+    return [self requestForEndPoint:@"/translate" params:@{@"limit": @(1), @"s": term}];
+}
+
++ (NSURLRequest *) giphyRequestForRandomGIFWithTag:(NSString *) tag
+{
+    return [self requestForEndPoint:@"/random" params:@{@"tag": tag}];
+}
+
++ (NSURLRequest *) requestForEndPoint:(NSString *) endpoint params:(NSDictionary *) params
+{
+    NSString * base = @"http://api.giphy.com/v1/gifs";
+    NSString * withEndPoint = [NSString stringWithFormat:@"%@%@", base, endpoint];
+    NSError * error;
+    
+    NSMutableDictionary * paramsWithAPIKey = [NSMutableDictionary dictionaryWithDictionary:params];
+    [paramsWithAPIKey setObject:kGiphyAPIKey forKey:@"api_key"];
+    NSURLRequest * request =  [[AFHTTPRequestSerializer serializer] requestWithMethod:@"GET" URLString:withEndPoint parameters:paramsWithAPIKey error:&error];
+    return request;
+}
+
++ (NSURLSessionDataTask *) searchGiphyWithTerm:(NSString *) searchTerm limit:(NSUInteger) limit offset:(NSUInteger) offset completion:(void (^) (NSArray * results, NSError * error)) block
 {
     NSURLSession * session = [NSURLSession sharedSession];
-    NSURLRequest * request = [AXCGiphy giphyRequestWithEndPoint:@"search?" params:@{@"limit":@(limit), @"offset":@(offset), @"q":searchTerm}];
+    NSURLRequest * request = [AXCGiphy requestForEndPoint:@"search?" params:@{@"limit":@(limit), @"offset":@(offset), @"q":searchTerm}];
     NSURLSessionDataTask * task = [session dataTaskWithRequest:request  completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         // network error
         if (error) {
@@ -100,24 +153,4 @@ static NSString * kGiphyAPIKey;
     return task;
 }
 
-+ (NSURLRequest *) giphyRequestWithEndPoint:(NSString *) endpoint params:(NSDictionary *) params
-{
-    NSString * base = @"http://api.giphy.com/v1/gifs/";
-    NSError * error;
-    NSMutableDictionary * paramsWithAPIKey = [NSMutableDictionary dictionaryWithDictionary:params];
-    [paramsWithAPIKey setObject:kGiphyAPIKey forKey:@"api_key"];
-    //return [[AFHTTPRequestSerializer serializer] requestWithMethod:@"GET" URLString:base parameters:paramsWithAPIKey error:&error];
-    return [NSURLRequest new];
-}
-
-+ (NSArray *) AXCGiphyArrayFromDictArray:(NSArray *) array
-{
-    NSMutableArray * gifArray = [NSMutableArray new];
-    [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        NSDictionary * dict = obj;
-        AXCGiphy * gif = [[AXCGiphy alloc] initWithDictionary:dict];
-        [gifArray addObject:gif];
-    }];
-    return gifArray;
-}
 @end

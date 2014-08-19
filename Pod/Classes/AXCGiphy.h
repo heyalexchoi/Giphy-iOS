@@ -39,14 +39,21 @@ extern NSString * const kGiphyPublicAPIKey;
 // set your Giphy API Key
 + (void) setGiphyAPIKey:(NSString *) APIkey;
 // get your Giphy API Key
-+ (NSString *) getGiphyAPIKey;
++ (NSString *) giphyAPIKey;
++ (NSURLRequest *) giphySearchRequestForTerm:(NSString *) term limit:(NSUInteger) limit offset:(NSInteger) offset;
++ (NSURLRequest *) giphyTrendingRequestWithLimit:(NSUInteger) limit offset:(NSUInteger) offset;
++ (NSURLRequest *) giphyRequestForGIFWithID:(NSString *) ID;
++ (NSURLRequest *) giphyRequestForGIFsWithIDs:(NSArray *) IDs;
++ (NSURLRequest *) giphyTranslationRequestForTerm:(NSString *) term;
++ (NSURLRequest *) giphyRequestForRandomGIFWithTag:(NSString *) tag;
++ (NSURLRequest *) requestForEndPoint:(NSString *) endpoint params:(NSDictionary *) params;
 // Search Giphy with search term. Result size can be limited with max 100 and default 25. Offset results defaults to 0.
-+ (NSURLSessionDataTask *) getGIFsForSearchTerm:(NSString *) searchTerm limit:(NSUInteger) limit offset:(NSUInteger) offset completion:(void (^) (NSArray * results, NSError * error)) block;
++ (NSURLSessionDataTask *) searchGiphyWithTerm:(NSString *) searchTerm limit:(NSUInteger) limit offset:(NSUInteger) offset completion:(void (^) (NSArray * results, NSError * error)) block;
 // Get Giphy GIF with ID
-+ (NSURLSessionDataTask *) getGIFWithID:(NSString *) ID completion:(void (^) (AXCGiphy * result, NSError * error)) block;
++ (NSURLSessionDataTask *) gifForID:(NSString *) ID completion:(void (^) (AXCGiphy * result, NSError * error)) block;
 // Get Giphy GIFs with IDs
-+ (NSURLSessionDataTask *) getGIFsWithIDs:(NSArray *) IDs completion:(void (^) (NSArray * results, NSError * error)) block;
-+ (NSURLSessionDataTask *) getGIFTranslationForTerm:(NSString *) term completion:(void (^) (AXCGiphy * result, NSError * error)) block;
-+ (NSURLSessionDataTask *) getRandomGIFWithcompletion:(void (^) (AXCGiphy * result, NSError * error)) block;
-+ (NSURLSessionDataTask *) getTrendingGIFsWithlimit:(NSUInteger) limit completion:(void (^) (NSArray * results, NSError * error)) block;
++ (NSURLSessionDataTask *) gifsForIDs:(NSArray *) IDs completion:(void (^) (NSArray * results, NSError * error)) block;
++ (NSURLSessionDataTask *) giphyTranslationForTerm:(NSString *) term completion:(void (^) (AXCGiphy * result, NSError * error)) block;
++ (NSURLSessionDataTask *) randomGIFWithcompletion:(void (^) (AXCGiphy * result, NSError * error)) block;
++ (NSURLSessionDataTask *) trendingGIFsWithlimit:(NSUInteger) limit completion:(void (^) (NSArray * results, NSError * error)) block;
 @end

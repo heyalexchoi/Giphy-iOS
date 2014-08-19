@@ -1,5 +1,6 @@
 target 'AXCGiphy', :exclusive => true do
   pod "AXCGiphy", :path => "../"
+  pod 'AFNetworking/Serialization', '~> 2.3.1'
 end
 
 target 'Tests', :exclusive => true do
