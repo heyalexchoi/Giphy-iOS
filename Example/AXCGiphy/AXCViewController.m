@@ -8,9 +8,13 @@
 
 #import "AXCViewController.h"
 #import <AXCGiphy/AXCGiphy.h>
+#import "AXCCollectionViewCell.h"
+#import <AnimatedGIFImageSerialization/AnimatedGIFImageSerialization.h>
 
-@interface AXCViewController ()
-
+NSString * const kCollectionViewCellIdentifier = @"cellReuseIdentifier";
+@interface AXCViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
+@property (strong, nonatomic) NSArray * searchResults;
+@property (weak, nonatomic) IBOutlet UICollectionView * collectionView;
 @end
 
 @implementation AXCViewController
@@ -21,6 +25,12 @@
 	// Do any additional setup after loading the view, typically from a nib.
     [AXCGiphy setGiphyAPIKey:kGiphyPublicAPIKey];
    
+    [AXCGiphy searchGiphyWithTerm:@"ponies" limit:10 offset:0 completion:^(NSArray *results, NSError *error) {
+        self.searchResults = results;
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    [self.collectionView reloadData];
+        }];
+    }];
     
 }
 
@@ -30,4 +40,28 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark UICollectionViewDataSource
+- (NSInteger) numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    return 1;
+}
+- (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return self.searchResults.count;
+}
+- (UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    AXCCollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCollectionViewCellIdentifier forIndexPath:indexPath];
+    AXCGiphy * gif = self.searchResults[indexPath.item];
+    
+    NSURLRequest * request = [NSURLRequest requestWithURL:gif.originalImage.url];
+    [[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        UIImage * image = [UIImage imageWithData:data];
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            cell.imageView.image = image;
+        }];
+    }] resume];
+    
+    return cell;
+}
 @end

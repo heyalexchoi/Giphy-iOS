@@ -132,7 +132,7 @@ static NSString * kGiphyAPIKey;
 + (NSURLSessionDataTask *) searchGiphyWithTerm:(NSString *) searchTerm limit:(NSUInteger) limit offset:(NSUInteger) offset completion:(void (^) (NSArray * results, NSError * error)) block
 {
     NSURLSession * session = [NSURLSession sharedSession];
-    NSURLRequest * request = [AXCGiphy requestForEndPoint:@"search?" params:@{@"limit":@(limit), @"offset":@(offset), @"q":searchTerm}];
+    NSURLRequest * request = [self giphySearchRequestForTerm:searchTerm limit:limit offset:offset];
     NSURLSessionDataTask * task = [session dataTaskWithRequest:request  completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         // network error
         if (error) {
@@ -140,11 +140,11 @@ static NSString * kGiphyAPIKey;
         } else {
             // json serialize error
             NSError * error;
-            NSArray * results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+            NSDictionary * results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
             if (error) {
                 block(nil, error);
             } else {
-                NSArray * gifArray = [AXCGiphy AXCGiphyArrayFromDictArray:results];
+                NSArray * gifArray = [AXCGiphy AXCGiphyArrayFromDictArray:results[@"data"]];
                 block(gifArray, nil);
             }
         }

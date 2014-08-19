@@ -19,7 +19,7 @@
 @synthesize url = _url, width = _width, height = _height;
 - (instancetype) initWithDictionary:(NSDictionary *)dictionary
 {
-    self = [super init];
+    self = [super initWithDictionary:dictionary];
     if (!self) {
         return nil;
     }

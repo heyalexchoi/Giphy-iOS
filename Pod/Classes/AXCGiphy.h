@@ -7,14 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AXCGiphyImageDownsampled.h"
+#import "AXCGiphyImageFixed.h"
+#import "AXCGiphyImageOriginal.h"
 // public api key. you should get your own: https://github.com/giphy/GiphyAPI#access-and-api-keys
 extern NSString * const kGiphyPublicAPIKey;
-
-@class AXCGiphyImage;
-@class AXCGiphyImageDownsampled;
-@class AXCGiphyImageFixed;
-@class AXCGiphyImageOriginal;
-
 @interface AXCGiphy : NSObject
 @property (readonly, strong, nonatomic) NSString * gifID;
 @property (readonly, strong, nonatomic) NSString * type;
