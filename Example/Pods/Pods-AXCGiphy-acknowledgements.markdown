@@ -24,9 +24,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-## AXCGiphy
+## AnimatedGIFImageSerialization
 
-Copyright (c) 2014 Alex Choi <heyalexchoi@gmail.com>
+Copyright (c) 2014 Mattt Thompson (http://mattt.me/)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -47,9 +47,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-## AnimatedGIFImageSerialization
+## Giphy-iOS
 
-Copyright (c) 2014 Mattt Thompson (http://mattt.me/)
+Copyright (c) 2014 Alex Choi <heyalexchoi@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

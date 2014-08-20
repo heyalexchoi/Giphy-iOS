@@ -7,7 +7,7 @@
 //
 
 #import "AXCViewController.h"
-#import <AXCGiphy/AXCGiphy.h>
+#import <Giphy-iOS/AXCGiphy.h>
 #import "AXCCollectionViewCell.h"
 #import <AnimatedGIFImageSerialization/AnimatedGIFImageSerialization.h>
 
