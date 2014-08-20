@@ -1,9 +1,8 @@
 # Giphy-iOS
-
-[![CI Status](http://img.shields.io/travis/Alex Choi/AXCGiphy.svg?style=flat)](https://travis-ci.org/Alex Choi/AXCGiphy)
-[![Version](https://img.shields.io/cocoapods/v/AXCGiphy.svg?style=flat)](http://cocoadocs.org/docsets/AXCGiphy)
-[![License](https://img.shields.io/cocoapods/l/AXCGiphy.svg?style=flat)](http://cocoadocs.org/docsets/AXCGiphy)
-[![Platform](https://img.shields.io/cocoapods/p/AXCGiphy.svg?style=flat)](http://cocoadocs.org/docsets/AXCGiphy)
+<!--- [![CI Status](http://img.shields.io/travis/Alex Choi/AXCGiphy.svg?style=flat)](https://travis-ci.org/Alex Choi/AXCGiphy) --> 
+[![Version](https://img.shields.io/cocoapods/v/Giphy-iOS.svg?style=flat)](http://cocoadocs.org/docsets/Giphy-iOS)
+[![License](https://img.shields.io/cocoapods/l/Giphy-iOS.svg?style=flat)](http://cocoadocs.org/docsets/Giphy-iOS)
+[![Platform](https://img.shields.io/cocoapods/p/Giphy-iOS.svg?style=flat)](http://cocoadocs.org/docsets/Giphy-iOS)
 
 Giphy-iOS is a [Giphy API](https://github.com/Giphy/GiphyAPI) client for iOS in Objective-C.
 
