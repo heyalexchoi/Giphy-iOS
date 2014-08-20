@@ -24,9 +24,11 @@ NSString * const kCollectionViewCellIdentifier = @"cellReuseIdentifier";
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
+    // set your API key before making any requests. You may use kGiphyPublicAPIKey for development.
     [AXCGiphy setGiphyAPIKey:kGiphyPublicAPIKey];
    
-    [self getTranslation];
+    // see the methods below for usage examples
+    [self searchForFrogs];
 }
 
 - (void) getTranslation
@@ -59,7 +61,6 @@ NSString * const kCollectionViewCellIdentifier = @"cellReuseIdentifier";
     }];
 }
 
-
 - (void) getTrending
 {
     [AXCGiphy trendingGIFsWithlimit:10 offset:0 completion:^(NSArray *results, NSError *error) {
@@ -70,9 +71,9 @@ NSString * const kCollectionViewCellIdentifier = @"cellReuseIdentifier";
     }];
 }
 
-- (void) searchForPonies
+- (void) searchForFrogs
 {
-    [AXCGiphy searchGiphyWithTerm:@"ponies" limit:10 offset:0 completion:^(NSArray *results, NSError *error) {
+    [AXCGiphy searchGiphyWithTerm:@"frogs" limit:10 offset:0 completion:^(NSArray *results, NSError *error) {
         self.giphyResults = results;
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             [self.collectionView reloadData];

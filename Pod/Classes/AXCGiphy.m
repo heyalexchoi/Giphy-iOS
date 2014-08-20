@@ -114,7 +114,7 @@ static NSString * kGiphyAPIKey;
 {
     return [self requestForEndPoint:@"/translate" params:@{@"limit": @(1), @"s": term}];
 }
-
+/** Response on this endpoint is inconsistent with the rest of the endpoints' responses*/
 + (NSURLRequest *) giphyRequestForRandomGIFWithTag:(NSString *) tag
 {
     return [self requestForEndPoint:@"/random" params:@{@"tag": tag}];
