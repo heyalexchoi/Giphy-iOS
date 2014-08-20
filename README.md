@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/cocoapods/l/AXCGiphy.svg?style=flat)](http://cocoadocs.org/docsets/AXCGiphy)
 [![Platform](https://img.shields.io/cocoapods/p/AXCGiphy.svg?style=flat)](http://cocoadocs.org/docsets/AXCGiphy)
 
-Giphy-iOS is a [Giphy API](https://github.com/Giphy/GiphyAPI) client for Objective-C. 
+Giphy-iOS is a [Giphy API](https://github.com/Giphy/GiphyAPI) client for iOS in Objective-C.
 
 
 ## Usage
@@ -15,7 +15,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 You should read about [Giphy's Access and API keys here](https://github.com/Giphy/GiphyAPI#access-and-api-keys).
 
 ### Giphy-iOS / AXCGiphy
-'AXCGiphy' provides convenient access to [Giphy's API](https://github.com/Giphy/GiphyAPI) to the following endpoints:
+'AXCGiphy' provides convenient access to [Giphy's API](https://github.com/Giphy/GiphyAPI) endpoints:
 
 - search
 - trending
@@ -32,9 +32,9 @@ You can query the endpoints through the blocks based interface:
 {
     [super viewDidLoad];
 	// set your API key before making any requests. You may use kGiphyPublicAPIKey for development.
- [AXCGiphy setGiphyAPIKey:kGiphyPublicAPIKey];
+    [AXCGiphy setGiphyAPIKey:kGiphyPublicAPIKey];
 
-[AXCGiphy searchGiphyWithTerm:@"frogs" limit:10 offset:0 completion:^(NSArray *results, NSError *error) {
+    [AXCGiphy searchGiphyWithTerm:@"frogs" limit:10 offset:0 completion:^(NSArray *results, NSError *error) {
         self.giphyResults = results;
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             [self.collectionView reloadData];
@@ -61,11 +61,11 @@ You can query the endpoints through the blocks based interface:
 
 ```
 
-AXCGiphy blocks-based class methods provide asynchronous access to either AXCGiphy instances or an NSArray of AXCGiphy instances. AXCGiphy instances represent Giphy's gifs and their metadata. However, AXCGiphy only provide URLs to gifs. It is up to you to fetch the data and turn them into images.
+AXCGiphy blocks based class methods provide asynchronous access to either AXCGiphy instances or an NSArray of AXCGiphy instances. AXCGiphy instances represent Giphy's gifs and their metadata. However, AXCGiphy only provides URLs to gifs. How you use these URLs is up to you.
 
-My example uses NSURLRequests with NSURLSession to fetch the image data at the URL and [mattt's AnimatedGifSerialization](https://github.com/mattt/AnimatedGIFImageSerialization). If you are unsure of how to proceed, use my example app as a starting point.
+My example uses NSURLRequests with NSURLSession to fetch the image data at the URLs and [mattt's AnimatedGifSerialization](https://github.com/mattt/AnimatedGIFImageSerialization) to decode the animated GIFs into animated UIImages. If you are unsure of how to proceed, use my example app as a starting point.
 
-The blocks-based class methods return NSURLSessionDataTasks for additional control, should you need it.
+The blocks based class methods return NSURLSessionDataTasks for additional control, should you need it.
 
 AXCGiphy also provides class methods to generate NSURLRequests for these endpoints.
 
