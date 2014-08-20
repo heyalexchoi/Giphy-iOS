@@ -47,14 +47,17 @@ static NSString * kGiphyAPIKey;
     }
     self.gifID = dictionary[@"id"];
     self.type = dictionary[@"type"];
-    self.url = dictionary[@"url"];
-    self.bitlyURL = dictionary[@"bitly_url"];
-    self.bitlyGIFURL = dictionary[@"bitly_gif_url"];
-    self.embedURL = dictionary[@"embed_url"];
+    self.url = [NSURL URLWithString:dictionary[@"url"]];
+    self.bitlyURL = [NSURL URLWithString:dictionary[@"bitly_url"]];
+    self.bitlyGIFURL = [NSURL URLWithString:dictionary[@"bitly_gif_url"]];
+    self.embedURL = [NSURL URLWithString:dictionary[@"embed_url"]];
     self.username = dictionary[@"username"];
-    self.source = dictionary[@"source"];
+    self.source = [NSURL URLWithString:dictionary[@"source"]];
     self.rating = dictionary[@"rating"];
-    self.trendingDateTime = dictionary[@"trending_datetime"];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    self.trendingDateTime = [dateFormatter dateFromString:dictionary[@"trending_datetime"]];
     
     NSDictionary * images = dictionary[@"images"];
     self.fixedHeightImage = [[AXCGiphyImageFixed alloc] initWithDictionary:images[@"fixed_height"]];
