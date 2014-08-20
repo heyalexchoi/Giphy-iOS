@@ -73,7 +73,7 @@ NSString * const kCollectionViewCellIdentifier = @"cellReuseIdentifier";
 
 - (void) searchForFrogs
 {
-    [AXCGiphy searchGiphyWithTerm:@"frogs" limit:10 offset:0 completion:^(NSArray *results, NSError *error) {
+    NSURLSessionDataTask * task = [AXCGiphy searchGiphyWithTerm:@"frogs" limit:10 offset:0 completion:^(NSArray *results, NSError *error) {
         self.giphyResults = results;
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             [self.collectionView reloadData];
