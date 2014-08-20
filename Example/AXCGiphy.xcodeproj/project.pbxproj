@@ -66,7 +66,7 @@
 		6003F5BB195388D20070C39A /* Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests.m; sourceTree = "<group>"; };
 		606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Prefix.pch"; sourceTree = "<group>"; };
 		65F6616BECB04D119BFBD04B /* libPods-AXCGiphy.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AXCGiphy.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		81C84A0080FC4DACB6B6873B /* AXCGiphy.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = AXCGiphy.podspec; path = ../AXCGiphy.podspec; sourceTree = "<group>"; };
+		81C84A0080FC4DACB6B6873B /* Giphy-iOS.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = "Giphy-iOS.podspec"; path = "../Giphy-iOS.podspec"; sourceTree = "<group>"; };
 		DB9E290E2BD2499BA1B52CFE /* Pods-AXCGiphy.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AXCGiphy.xcconfig"; path = "Pods/Pods-AXCGiphy.xcconfig"; sourceTree = "<group>"; };
 		DCDFC1D898B648F5B2FBFCD1 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		FEA614BC82104E5687416D27 /* Pods-Tests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.xcconfig"; path = "Pods/Pods-Tests.xcconfig"; sourceTree = "<group>"; };
@@ -184,7 +184,7 @@
 		60FF7A9C1954A5C5007DD14C /* Podspec Metadata */ = {
 			isa = PBXGroup;
 			children = (
-				81C84A0080FC4DACB6B6873B /* AXCGiphy.podspec */,
+				81C84A0080FC4DACB6B6873B /* Giphy-iOS.podspec */,
 				DCDFC1D898B648F5B2FBFCD1 /* README.md */,
 				232524FD9D0C48DD9ED4DDDD /* LICENSE */,
 			);
