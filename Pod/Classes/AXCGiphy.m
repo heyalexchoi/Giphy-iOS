@@ -144,6 +144,7 @@ static NSString * kGiphyAPIKey;
             // json serialize error
             NSError * error;
             NSDictionary * results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+            error = error ?: [self customErrorFromResults:results];
             if (error) {
                 block(nil, error);
             } else {
@@ -168,6 +169,7 @@ static NSString * kGiphyAPIKey;
             // json serialize error
             NSError * error;
             NSDictionary * results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+            error = error ?: [self customErrorFromResults:results];
             if (error) {
                 block(nil, error);
             } else {
@@ -192,6 +194,7 @@ static NSString * kGiphyAPIKey;
             // json serialize error
             NSError * error;
             NSDictionary * results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+            error = error ?: [self customErrorFromResults:results];
             if (error) {
                 block(nil, error);
             } else {
@@ -217,6 +220,7 @@ static NSString * kGiphyAPIKey;
             // json serialize error
             NSError * error;
             NSDictionary * results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+            error = error ?: [self customErrorFromResults:results];
             if (error) {
                 block(nil, error);
             } else {
@@ -241,6 +245,7 @@ static NSString * kGiphyAPIKey;
             // json serialize error
             NSError * error;
             NSDictionary * results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+            error = error ?: [self customErrorFromResults:results];
             if (error) {
                 block(nil, error);
             } else {
@@ -252,4 +257,15 @@ static NSString * kGiphyAPIKey;
     [task resume];
     return task;
 }
+
++ (NSError *)customErrorFromResults:(NSDictionary *)results
+{
+    NSArray * resultsData = results[@"data"];
+    if ([resultsData count] == 0) {
+        return [[NSError alloc] initWithDomain:@"com.giphy.ios" code:-1 userInfo:@{@"error_message" : @"No results were found"}];
+    }
+    return nil;
+}
+
+
 @end
