@@ -51,6 +51,10 @@ extern NSString * const kGiphyPublicAPIKey;
 + (void) setGiphyAPIKey:(NSString *) APIkey;
 /** Get your currently set Giphy API Key */
 + (NSString *) giphyAPIKey;
+/** Set your Giphy Upload API Username. You must set this before uploading in a production environment. You can avoid it while in development. */
++ (void) setGiphyUploadAPIUsername:(NSString *) uploadAPIUsername;
+/** Get your currently set Giphy Upload API Username */
++ (NSString *) setGiphyUploadAPIUsername;
 /** NSURLRequest to search Giphy with term. You can limit results, with a max of 100. Returns 25 by default. Use offset with limit to paginate through results. */
 + (NSURLRequest *) giphySearchRequestForTerm:(NSString *) term limit:(NSUInteger) limit offset:(NSInteger) offset;
 /** NSURLRequest to get trending GIFs. You can limit results, with a max of 100. Returns 25 by default. Use offset with limit to paginate through results. */
@@ -71,5 +75,7 @@ extern NSString * const kGiphyPublicAPIKey;
 + (NSURLSessionDataTask *) gifsForIDs:(NSArray *) IDs completion:(void (^) (NSArray * results, NSError * error)) block;
 /** Use Giphy's translation 'special sauce' to translate your term into a GIF. Asynchronously returns either AXCGiphy object or an error. */
 + (NSURLSessionDataTask *) giphyTranslationForTerm:(NSString *) term completion:(void (^) (AXCGiphy * result, NSError * error)) block;
+/** Uploads a GIF or video file to Giphy. Asynchronously returns either AXCGiphy object or an error. */
++ (NSURLSessionDataTask *) uploadGIFToGiphyForFilePath:(NSString *)filePath tags:(NSString *)tags completion:(void (^) (AXCGiphy * result, NSError * error)) block;
 
 @end
