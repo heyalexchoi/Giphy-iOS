@@ -85,12 +85,12 @@ static NSString * kGiphyUploadAPIUsername;
     return kGiphyAPIKey;
 }
 
-+ (void) setGiphyAPIUsername:(NSString *)uploadAPIUsername
++ (void) setGiphyUploadAPIUsername:(NSString *)uploadAPIUsername
 {
     kGiphyUploadAPIUsername = uploadAPIUsername;
 }
 
-+ (NSString *) giphyAPIUsername
++ (NSString *) giphyUploadAPIUsername
 {
     return kGiphyUploadAPIUsername;
 }

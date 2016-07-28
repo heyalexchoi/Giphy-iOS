@@ -54,7 +54,7 @@ extern NSString * const kGiphyPublicAPIKey;
 /** Set your Giphy Upload API Username. You must set this before uploading in a production environment. You can avoid it while in development. */
 + (void) setGiphyUploadAPIUsername:(NSString *) uploadAPIUsername;
 /** Get your currently set Giphy Upload API Username */
-+ (NSString *) setGiphyUploadAPIUsername;
++ (NSString *) giphyUploadAPIUsername;
 /** NSURLRequest to search Giphy with term. You can limit results, with a max of 100. Returns 25 by default. Use offset with limit to paginate through results. */
 + (NSURLRequest *) giphySearchRequestForTerm:(NSString *) term limit:(NSUInteger) limit offset:(NSInteger) offset;
 /** NSURLRequest to get trending GIFs. You can limit results, with a max of 100. Returns 25 by default. Use offset with limit to paginate through results. */
