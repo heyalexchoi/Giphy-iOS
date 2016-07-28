@@ -76,6 +76,6 @@ extern NSString * const kGiphyPublicAPIKey;
 /** Use Giphy's translation 'special sauce' to translate your term into a GIF. Asynchronously returns either AXCGiphy object or an error. */
 + (NSURLSessionDataTask *) giphyTranslationForTerm:(NSString *) term completion:(void (^) (AXCGiphy * result, NSError * error)) block;
 /** Uploads a GIF or video file to Giphy. Asynchronously returns either AXCGiphy object or an error. */
-+ (NSURLSessionDataTask *) uploadGIFToGiphyForFilePath:(NSString *)filePath tags:(NSString *)tags completion:(void (^) (AXCGiphy * result, NSError * error)) block;
++ (NSURLSessionDataTask *) uploadGIFToGiphyForFilePath:(NSString *)filePath tags:(NSString *)tags completion:(void (^) (NSString *resultGiphyGifId, NSError * error)) block;
 
 @end

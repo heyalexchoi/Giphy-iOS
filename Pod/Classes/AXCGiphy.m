@@ -322,7 +322,7 @@ static NSString * kGiphyUploadAPIUsername;
     return task;
 }
 
-+ (NSURLSessionDataTask *) uploadGIFToGiphyForFilePath:(NSString *)filePath tags:(NSString *)tags completion:(void (^) (AXCGiphy * result, NSError * error)) block;
++ (NSURLSessionDataTask *) uploadGIFToGiphyForFilePath:(NSString *)filePath tags:(NSString *)tags completion:(void (^) (NSString *resultGiphyGifId, NSError * error)) block;
 {
     NSURLSession * session = [NSURLSession sharedSession];
     NSURLRequest * request = [self giphyRequestForUploadWithFilePath:filePath tags:tags];
@@ -335,13 +335,15 @@ static NSString * kGiphyUploadAPIUsername;
             // json serialize error
             NSError * error;
             NSDictionary * results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
-            
+            NSLog(@"Okay: %@",results);
+
             error = error ?: [self customErrorFromResults:results];
             if (error) {
                 block(nil, error);
             } else {
-                AXCGiphy * result = [[AXCGiphy alloc] initWithDictionary:results[@"data"]];
-                block(result, nil);
+                NSDictionary *dict = results[@"data"];
+                NSString * resultGiphyGifId = dict[@"id"];
+                block(resultGiphyGifId, nil);
             }
         }
     }];
