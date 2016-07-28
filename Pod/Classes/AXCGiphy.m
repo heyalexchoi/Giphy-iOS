@@ -14,6 +14,8 @@
 #import "AXCGiphyImageOriginal.h"
 
 NSString * const kGiphyPublicAPIKey = @"dc6zaTOxFJmzC";
+NSString * const kGiphyAPIUrl       = @"http://api.giphy.com/v1/gifs";
+NSString * const kGiphyUploadAPIUrl = @"http://upload.giphy.com/v1/gifs";
 
 @interface AXCGiphy ()
 @property (readwrite, strong, nonatomic) NSString * gifID;
@@ -38,6 +40,7 @@ NSString * const kGiphyPublicAPIKey = @"dc6zaTOxFJmzC";
 
 @implementation AXCGiphy
 static NSString * kGiphyAPIKey;
+static NSString * kGiphyUploadAPIUsername;
 
 - (instancetype) initWithDictionary: (NSDictionary *) dictionary
 {
@@ -71,13 +74,25 @@ static NSString * kGiphyAPIKey;
     
     return self;
 }
+
 + (void) setGiphyAPIKey:(NSString *) APIKey
 {
     kGiphyAPIKey = APIKey;
 }
+
 + (NSString *) giphyAPIKey
 {
     return kGiphyAPIKey;
+}
+
++ (void) setGiphyUploadAPIUsername:(NSString *)uploadAPIUsername
+{
+    kGiphyUploadAPIUsername = uploadAPIUsername;
+}
+
++ (NSString *) giphyUploadAPIUsername
+{
+    return kGiphyUploadAPIUsername;
 }
 
 + (NSArray *) AXCGiphyArrayFromDictArray:(NSArray *) array
@@ -93,42 +108,90 @@ static NSString * kGiphyAPIKey;
 
 + (NSURLRequest *) giphySearchRequestForTerm:(NSString *) term limit:(NSUInteger) limit offset:(NSInteger) offset
 {
-    return [self requestForEndPoint:@"/search" params:@{@"limit": @(limit), @"offset": @(offset), @"q": term}];
+    return [self requestForEndPoint:@"/search" params:@{@"limit": @(limit), @"offset": @(offset), @"q": term} usingUploadAPI:NO];
 }
 
 + (NSURLRequest *) giphyTrendingRequestWithLimit:(NSUInteger) limit offset:(NSUInteger) offset
 {
-    return [self requestForEndPoint:@"/trending" params:@{@"limit": @(limit), @"offset": @(offset)}];
+    return [self requestForEndPoint:@"/trending" params:@{@"limit": @(limit), @"offset": @(offset)} usingUploadAPI:NO];
 }
 
 + (NSURLRequest *) giphyRequestForGIFWithID:(NSString *) ID
 {
-    return [self requestForEndPoint:[NSString stringWithFormat:@"/%@",ID] params:nil];
+    return [self requestForEndPoint:[NSString stringWithFormat:@"/%@",ID] params:nil usingUploadAPI:NO];
 }
 + (NSURLRequest *) giphyRequestForGIFsWithIDs:(NSArray *) IDs
 {
-    return [self requestForEndPoint:@"" params:@{@"ids": [IDs componentsJoinedByString:@","]}];
+    return [self requestForEndPoint:@"" params:@{@"ids": [IDs componentsJoinedByString:@","]} usingUploadAPI:NO];
 }
 
 + (NSURLRequest *) giphyTranslationRequestForTerm:(NSString *) term
 {
-    return [self requestForEndPoint:@"/translate" params:@{@"limit": @(1), @"s": term}];
+    return [self requestForEndPoint:@"/translate" params:@{@"limit": @(1), @"s": term} usingUploadAPI:NO];
 }
 /** Response on this endpoint is inconsistent with the rest of the endpoints' responses*/
 + (NSURLRequest *) giphyRequestForRandomGIFWithTag:(NSString *) tag
 {
-    return [self requestForEndPoint:@"/random" params:@{@"tag": tag}];
+    return [self requestForEndPoint:@"/random" params:@{@"tag": tag} usingUploadAPI:NO];
 }
 
-+ (NSURLRequest *) requestForEndPoint:(NSString *) endpoint params:(NSDictionary *) params
++ (NSURLRequest *) giphyRequestForUploadWithFilePath:(NSString *) filePath tags:(NSString *)tags
 {
-    NSString * base = @"http://api.giphy.com/v1/gifs";
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObject:filePath forKey:@"file"];
+    
+    if ( tags != nil )
+    {
+        if ( tags.length > 0 )
+        {
+            [params setObject:tags forKey:@"tags"];
+        }
+    }
+    
+    return [self requestForEndPoint:@"" params:params usingUploadAPI:YES];
+}
+
++ (NSURLRequest *) requestForEndPoint:(NSString *) endpoint params:(NSDictionary *) params usingUploadAPI:(BOOL) usingUploadAPI
+{
+    NSString * base = usingUploadAPI ? kGiphyUploadAPIUrl : kGiphyAPIUrl;
     NSString * withEndPoint = [NSString stringWithFormat:@"%@%@", base, endpoint];
     NSError * error;
     
     NSMutableDictionary * paramsWithAPIKey = [NSMutableDictionary dictionaryWithDictionary:params];
     [paramsWithAPIKey setObject:kGiphyAPIKey forKey:@"api_key"];
-    NSURLRequest * request =  [[AFHTTPRequestSerializer serializer] requestWithMethod:@"GET" URLString:withEndPoint parameters:paramsWithAPIKey error:&error];
+    
+    NSURLRequest * request;
+    
+    if ( !usingUploadAPI )
+    {
+        request = [[AFHTTPRequestSerializer serializer] requestWithMethod:@"GET" URLString:withEndPoint parameters:paramsWithAPIKey error:&error];
+    }
+    else
+    {
+        if ( kGiphyUploadAPIUsername != nil )
+        {
+            [paramsWithAPIKey setObject:kGiphyUploadAPIUsername forKey:@"username"];
+        }
+        
+        NSString *filePath = [[[paramsWithAPIKey objectForKey:@"file"] copy] retain];
+        [paramsWithAPIKey removeObjectForKey:@"file"];
+
+        request = [[AFHTTPRequestSerializer serializer] multipartFormRequestWithMethod:@"POST" URLString:withEndPoint parameters:paramsWithAPIKey constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+            NSData *imageData = [NSData dataWithContentsOfFile:filePath];
+            
+            if ( imageData )
+            {
+                if ( imageData.length )
+                {
+                    [formData appendPartWithFileData:imageData
+                                                name:@"file"
+                                            fileName:@"a" mimeType:@"image/gif"];
+                }
+            }
+            
+            [filePath release];
+        } error:&error];
+    }
+    
     return request;
 }
 
@@ -136,6 +199,7 @@ static NSString * kGiphyAPIKey;
 {
     NSURLSession * session = [NSURLSession sharedSession];
     NSURLRequest * request = [self giphySearchRequestForTerm:searchTerm limit:limit offset:offset];
+    
     NSURLSessionDataTask * task = [session dataTaskWithRequest:request  completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         // network error
         if (error) {
@@ -251,6 +315,35 @@ static NSString * kGiphyAPIKey;
             } else {
                 NSArray * gifs = [AXCGiphy AXCGiphyArrayFromDictArray:results[@"data"]];
                 block(gifs, nil);
+            }
+        }
+    }];
+    [task resume];
+    return task;
+}
+
++ (NSURLSessionDataTask *) uploadGIFToGiphyForFilePath:(NSString *)filePath tags:(NSString *)tags completion:(void (^) (NSString *resultGiphyGifId, NSError * error)) block;
+{
+    NSURLSession * session = [NSURLSession sharedSession];
+    NSURLRequest * request = [self giphyRequestForUploadWithFilePath:filePath tags:tags];
+    
+    NSURLSessionDataTask * task = [session dataTaskWithRequest:request  completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        // network error
+        if (error) {
+            block(nil, error);
+        } else {
+            // json serialize error
+            NSError * error;
+            NSDictionary * results = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
+            NSLog(@"Okay: %@",results);
+
+            error = error ?: [self customErrorFromResults:results];
+            if (error) {
+                block(nil, error);
+            } else {
+                NSDictionary *dict = results[@"data"];
+                NSString * resultGiphyGifId = dict[@"id"];
+                block(resultGiphyGifId, nil);
             }
         }
     }];
